@@ -9,19 +9,31 @@ export class Chat {
     type: SchemaTypes.String,
     required: true,
   })
-  sender: string;
+  userEmail: string;
 
   @Prop({
     type: SchemaTypes.String,
     required: true,
   })
-  receiver: string;
+  adminEmail: string;
 
   @Prop({
-    type: SchemaTypes.String,
-    required: true,
+    type: [
+      {
+        senderEmail: { type: String },
+        receiverEmail: { type: String },
+        message: { type: String },
+        createdAt: { type: Date, default: Date.now },
+      },
+    ],
   })
-  message: string;
+  messages: [
+    {
+      senderEmail: { type: String };
+      receiverEmail: { type: String };
+      message: { type: String };
+    },
+  ];
 }
 
 export const chatSchema = SchemaFactory.createForClass(Chat);
