@@ -9,19 +9,41 @@ export class Chat {
     type: SchemaTypes.String,
     required: true,
   })
-  userEmail: string;
+  userName: string;
 
   @Prop({
     type: SchemaTypes.String,
     required: true,
   })
+  userEmail: string;
+
+  @Prop({
+    type: SchemaTypes.String,
+    required: true,
+    ref: 'Admin',
+  })
   adminEmail: string;
+
+  @Prop({
+    type: SchemaTypes.String,
+    required: true,
+    ref: 'Question',
+  })
+  question: string;
+
+  @Prop({
+    type: SchemaTypes.String,
+    require: true,
+    ref: 'CustomerSupport',
+  })
+  customerSupportEmail: string;
 
   @Prop({
     type: [
       {
         senderEmail: { type: String },
         receiverEmail: { type: String },
+        image: { type: String },
         message: { type: String },
         createdAt: { type: Date, default: Date.now },
       },
@@ -29,9 +51,11 @@ export class Chat {
   })
   messages: [
     {
-      senderEmail: { type: String };
-      receiverEmail: { type: String };
-      message: { type: String };
+      senderEmail: string;
+      receiverEmail: string;
+      message: string;
+      image: String;
+      createdAt: string;
     },
   ];
 }
