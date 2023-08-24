@@ -1,0 +1,32 @@
+[
+  {
+    "customerSupportName": "Mahi",
+    "customerSupportEmail": "mahi@gmail.com",
+    "isAvailable": true
+  },
+  {
+    "customerSupportName": "Mihir",
+    "customerSupportEmail": "mihir@gmail.com",
+    "isAvailable": true
+  },
+  {
+    "customerSupportName": "Meet",
+    "customerSupportEmail": "meet@gmail.com",
+    "isAvailable": true
+  },
+  {
+    "customerSupportName": "Krusha",
+    "customerSupportEmail": "krusha@gmail.com",
+    "isAvailable": true
+  },
+  {
+    "customerSupportName": "Komal",
+    "customerSupportEmail": "komal@gmail.com",
+    "isAvailable": true
+  },
+  {
+    "customerSupportName": "Kapil",
+    "customerSupportEmail": "kapil@gmail.com",
+    "isAvailable": true
+  }
+]

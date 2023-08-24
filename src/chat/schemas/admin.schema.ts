@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes, HydratedDocument } from 'mongoose';
 
-@Schema({ timestamps: true, collection: 'customersupport' })
+@Schema({ timestamps: true, collection: 'admin' })
 export class Admin {
   @Prop({
     type: SchemaTypes.String,

@@ -26,8 +26,8 @@ export class Chat {
 
   @Prop({
     type: SchemaTypes.String,
-    required: true,
-    ref: 'Question',
+    // required: true,
+    ref: 'Questions',
   })
   question: string;
 
@@ -49,7 +49,7 @@ export class Chat {
       },
     ],
   })
-  messages: [
+  messages?: [
     {
       senderEmail: string;
       receiverEmail: string;

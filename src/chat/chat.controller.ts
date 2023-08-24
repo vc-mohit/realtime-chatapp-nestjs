@@ -1,36 +1,40 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Post, Body, Get, Render, Param } from '@nestjs/common';
+import { Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-import { CreateChatDto } from './dto/create-chat.dto';
+import { CreateChatDto, CreateRoomDto } from './dto/create-chat.dto';
+import {
+  CreateRoomModel,
+  questionsModel,
+  sendMessageModel,
+} from './chat.types';
 
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Post()
-  create(@Body() createChatDto: CreateChatDto) {
-    return this.chatService.create(createChatDto);
+  @Post('send-message')
+  async sendMessage(@Body() createChatDto: CreateChatDto): sendMessageModel {
+    // const userEmail = data.username;
+    return this.chatService.sendMessage(createChatDto);
+
+    // await this.chatService.sendMessage({
+    //   username: userEmail,
+    //   message: data.message,
+    // });
   }
 
-  @Get()
-  findAll() {
-    return this.chatService.findAll();
+  handleConnection(socket: Socket) {
+    this.chatService.handleConnection(socket);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatService.findOne(+id);
+  //create room
+  @Post('room')
+  async createRoom(@Body() createRoomDto: CreateRoomDto): CreateRoomModel {
+    return this.chatService.createRoom(createRoomDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatService.remove(+id);
+  @Get('questions')
+  async getAllQuestions(): questionsModel {
+    return this.chatService.getAllQuestions();
   }
 }

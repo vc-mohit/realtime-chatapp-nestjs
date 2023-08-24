@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { SchemaTypes, HydratedDocument } from 'mongoose';
 
-@Schema({ timestamps: true, collection: 'customersupport' })
+@Schema({ timestamps: true })
 export class CustomerSupport {
   @Prop({
     type: SchemaTypes.String,
@@ -23,5 +23,6 @@ export class CustomerSupport {
   isAvailable: Boolean;
 }
 
-export const adminSchema = SchemaFactory.createForClass(CustomerSupport);
-export type AdminDocument = HydratedDocument<CustomerSupport>;
+export const CustomerSupportSchema =
+  SchemaFactory.createForClass(CustomerSupport);
+export type CustomerSupportDocument = HydratedDocument<CustomerSupport>;
