@@ -7,14 +7,7 @@ import { CustomerAssistantModule } from './customer-assistant/customer-assistant
 import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [
-    MongooseModule.forRoot('mongodb://127.0.0.1:27017', {
-      dbName: 'Chat-App',
-    }),
-    ChatModule,
-    CustomerAssistantModule,
-  ],
-  controllers: [AppController, ChatController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

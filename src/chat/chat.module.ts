@@ -4,7 +4,7 @@ import { Chat, ChatSchema } from './schemas/chat.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }]),
+    // MongooseModule.forFeature([{ name: Chat.name, schema: ChatSchema }]),
   ],
 })
 export class ChatModule {}
