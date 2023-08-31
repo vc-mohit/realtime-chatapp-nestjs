@@ -1,54 +1,65 @@
 import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import { Socket } from 'socket.io';
 import { Chat, ChatDocument } from './schemas/chat.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+
+const ROOM_MAX_CAPACITY = 2;
+
 @Injectable()
 export class ChatService {
   constructor(@InjectModel(Chat.name) private chatModel: Model<ChatDocument>) {}
+  private roomsState: { id: string; users: number }[] = [];
 
-  async createUserAndRoom(
-    userName?: string,
-    userEmail?: string,
-    customerEmail?: string,
-  ): Promise<ChatDocument> {
-    const newChat = new this.chatModel({
-      roomId: generateRoomId(),
-      userName,
-      userEmail,
-      customerEmail,
-      messages: [],
+  // send message****
+  async handleConnection(socket: Socket) {
+    const roomID = await this.joinRoom();
+
+    socket.join(roomID);
+
+    socket.on('send-message', async (message: string) => {
+      const newMessage = new this.chatModel({
+        roomId: roomID,
+        sender: socket.id,
+        message: message,
+      });
+      await newMessage.save();
+
+      socket.to(roomID).emit('receive-message', newMessage);
     });
 
-    return newChat.save();
+    socket.on('disconnect', () => {
+      this.leaveRoom(roomID);
+    });
   }
 
-  async saveMessage(
-    _id: Types.ObjectId,
-    message: any,
-  ): Promise<ChatDocument | null> {
-    const chat = await this.chatModel.findById(_id);
-
-    if (!chat) {
-      return null;
+  private async joinRoom(): Promise<string> {
+    for (let i = 0; i < this.roomsState.length; i++) {
+      if (this.roomsState[i].users < ROOM_MAX_CAPACITY) {
+        this.roomsState[i].users++;
+        return this.roomsState[i].id;
+      }
     }
 
-    chat.messages.push({
-      senderEmail: message.senderEmail,
-      receiverEmail: message.receiverEmail,
-      message: message.message,
-      image: message.image || '',
-      createdAt: new Date().toISOString(),
+    const newID = uuidv4();
+    this.roomsState.push({
+      id: newID,
+      users: 1,
     });
-
-    return chat.save();
+    return newID;
   }
 
-  async leaveRoom(chatId: Types.ObjectId): Promise<void> {
-    await this.chatModel.deleteOne({ _id: chatId });
+  private leaveRoom(id: string): void {
+    this.roomsState = this.roomsState.filter((room) => {
+      if (room.id === id) {
+        if (room.users === 1) {
+          return false;
+        } else {
+          room.users--;
+        }
+      }
+      return true;
+    });
   }
-}
-
-// Generate a random room ID (You can use UUID or any other method)
-function generateRoomId(): string {
-  return 'room_' + Math.random().toString(36).substr(2, 9);
 }

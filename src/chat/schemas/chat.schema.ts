@@ -15,41 +15,13 @@ export class Chat {
     type: SchemaTypes.String,
     required: true,
   })
-  userName: string;
+  sender: string;
 
   @Prop({
     type: SchemaTypes.String,
     required: true,
   })
-  userEmail: string;
-
-  @Prop({
-    type: SchemaTypes.String,
-    ref: 'CustomerSupport',
-    required: true,
-  })
-  customerEmail: string;
-
-  @Prop({
-    type: [
-      {
-        senderEmail: { type: String },
-        receiverEmail: { type: String },
-        image: { type: String },
-        message: { type: String },
-        createdAt: { type: Date, default: Date.now },
-      },
-    ],
-  })
-  messages?: [
-    {
-      senderEmail: string;
-      receiverEmail: string;
-      message: string;
-      image: String;
-      createdAt: string;
-    },
-  ];
+  message: string;
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);

@@ -1,32 +1,19 @@
 import {
   WebSocketGateway,
   OnGatewayConnection,
-  WebSocketServer,
+  OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Socket } from 'socket.io';
 import { ChatService } from './chat.service';
-
 @WebSocketGateway()
-export class SocketGateway implements OnGatewayConnection {
-  constructor(private readonly chatService: ChatService) {}
+export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private readonly socketService: ChatService) {}
 
-  @WebSocketServer()
-  server: Server;
+  handleConnection(socket: Socket) {
+    this.socketService.handleConnection(socket);
+  }
 
-  async handleConnection(socket: Socket) {
-    const chatData = await this.chatService.createUserAndRoom();
-    socket.join(chatData.roomId);
-
-    socket.on('send-message', async (message) => {
-      const savedMessage = await this.chatService.saveMessage(
-        chatData._id,
-        message,
-      );
-      socket.to(chatData.roomId).emit('receive-message', savedMessage);
-    });
-
-    socket.on('disconnect', async () => {
-      await this.chatService.leaveRoom(chatData._id);
-    });
+  handleDisconnect(socket: Socket) {
+    // Handle disconnection if needed
   }
 }
